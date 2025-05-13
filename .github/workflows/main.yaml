@@ -24,7 +24,7 @@ jobs:
           distribution: 'zulu'
           java-version: '19'  # Use Java 19 for Android
 
-      # Set up Flutter 3.27.1 for Android build
+      # Set up Flutter 3.27.1 (Specific version for Flutter setup)
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.27.1'  # Flutter version 3.27.1
@@ -37,10 +37,10 @@ jobs:
       # Build Android APK
       - run: flutter build apk --release --split-per-abi  # Build APK for Android
 
-      # Push APK directly to GitHub Releases
+      # Push APK to GitHub Releases
       - name: Push APK to Releases
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "build/app/outputs/flutter-apk/app-release.apk"  # Directly upload APK to GitHub Releases
+          artifacts: "build/app/outputs/flutter-apk/app-release.apk"  # Upload only the APK to GitHub Releases
           tag: v1.0.${{ github.run_number }}  # Automatically increment version
           token: ${{ secrets.TOKEN }}  # Use custom token stored in GitHub Secrets
