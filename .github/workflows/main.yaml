@@ -38,9 +38,12 @@ jobs:
       - run: flutter build apk --release --split-per-abi  # Build APK for Android
 
       # Push APK to GitHub Releases
-      - name: Push APK to Releases
+      - name: Push APK and Source Code to Releases
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "build/app/outputs/flutter-apk/app-release.apk"  # Upload only the APK to GitHub Releases
+          # Add both APK and source code as artifacts
+          artifacts: |
+            build/app/outputs/flutter-apk/app-release.apk  # APK file
+            .  # The source code (entire repository)
           tag: v1.0.${{ github.run_number }}  # Automatically increment version
           token: ${{ secrets.TOKEN }}  # Use custom token stored in GitHub Secrets
