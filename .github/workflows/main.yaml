@@ -16,39 +16,39 @@ jobs:
     runs-on: windows-latest  # Using Windows for Android build
 
     steps:
-      # Checkout code from the repository
-      - uses: actions/checkout@v3  # Correct version for checkout
+      # Checkout code from repository
+      - uses: actions/checkout@v3  # Use latest stable version of actions/checkout
 
       # Set up Java 19 (Required for Android build)
       - uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
-          java-version: '19'  # Java 19 version
+          java-version: '19'  # Set Java 19 version for Android
 
-      # Set up Flutter 3.27.1 for Android build
+      # Set up Flutter 3.27.1 (Specific version for Flutter setup)
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.27.1'  # Specify Flutter version 3.27.1
           channel: 'stable'
           architecture: x64
 
-      # Install dependencies using Flutter
+      # Install dependencies for Flutter project
       - run: flutter pub get
 
-      # Build the Android APK for release with split-per-abi
+      # Build Android APK (release version)
       - run: flutter build apk --release --split-per-abi  # Build APK for Android
 
-      # Upload APK as artifact
+      # Upload APK as artifact (using upload-artifact@v3)
       - name: Upload Android APK as artifact
-        uses: actions/upload-artifact@v2  # Using v2 for artifact upload
+        uses: actions/upload-artifact@v3  # Using v3 for artifact upload
         with:
           name: android-apk
           path: build/app/outputs/flutter-apk/app-release.apk  # Path to APK file
 
-      # Push the APK to GitHub Releases
+      # Push APK to GitHub Releases
       - name: Push to Releases
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "build/app/outputs/flutter-apk/app-release.apk"  # Directly upload the APK to GitHub Releases
+          artifacts: "build/app/outputs/flutter-apk/app-release.apk"  # Directly upload APK to GitHub Releases
           tag: v1.0.${{ github.run_number }}  # Automatically increment version
           token: ${{ secrets.TOKEN }}  # Use custom token stored in GitHub Secrets
