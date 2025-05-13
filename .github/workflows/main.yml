@@ -4,7 +4,7 @@ on:
     branches:
       - main
       - master
-      - develop  # This will trigger on push to main, master, or develop
+      - develop
   pull_request:
     branches:
       - main
@@ -15,10 +15,10 @@ jobs:
   build_android:
     name: Build Android APK
     runs-on: windows-latest  # Using Windows for Android build
-    
+
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v2  # Correct version for checkout
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
@@ -26,28 +26,25 @@ jobs:
           flutter-version: 'latest'
 
       - name: Install dependencies
-        run: |
-          flutter pub get
+        run: flutter pub get
 
       - name: Build Android APK
-        run: |
-          flutter build apk --release --split-per-abi
+        run: flutter build apk --release --split-per-abi
 
       - name: Upload APK as artifact
-        uses: actions/upload-artifact@v3
-
+        uses: actions/upload-artifact@v2  # Using v2 for artifact upload
         with:
           name: android-apk
-          path: build/app/outputs/flutter-apk/app-release.apk  # Path to the APK
+          path: build/app/outputs/flutter-apk/app-release.apk  # Path to APK file
 
   # iOS build job (macOS runner)
   build_ios:
     name: Build iOS IPA
     runs-on: macos-latest  # macOS runner for iOS builds
-    
+
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v2  # Correct version for checkout
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
@@ -55,8 +52,7 @@ jobs:
           flutter-version: 'latest'
 
       - name: Install dependencies
-        run: |
-          flutter pub get
+        run: flutter pub get
 
       - name: Build iOS IPA (No Code Sign)
         run: |
@@ -69,22 +65,21 @@ jobs:
           zip -r app.ipa Payload
 
       - name: Upload IPA as artifact
-        uses: actions/upload-artifact@v3
-
+        uses: actions/upload-artifact@v2  # Using v2 for artifact upload
         with:
           name: ios-ipa
-          path: build/ios/iphoneos/app.ipa  # Path to the IPA
+          path: build/ios/iphoneos/app.ipa  # Path to IPA file
 
   # Release job (Deploy to GitHub releases)
   release:
     name: Push to GitHub Releases
     runs-on: ubuntu-latest
-    
+
     needs: [build_android, build_ios]  # Ensure release runs after build jobs
-    
+
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v2  # Correct version for checkout
 
       - name: Upload Android APK and iOS IPA to GitHub Releases
         uses: ncipollo/release-action@v1
@@ -93,4 +88,4 @@ jobs:
             build/app/outputs/flutter-apk/app-release.apk
             build/ios/iphoneos/app.ipa
           tag: v1.0.${{ github.run_number }}  # Automatically increment version
-          token: ${{ secrets.TOKEN }}  # GitHub token for authentication
+          token: ${{ secrets.GITHUB_TOKEN }}  # GitHub token for authentication
