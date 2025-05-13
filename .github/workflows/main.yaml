@@ -16,37 +16,29 @@ jobs:
     runs-on: windows-latest  # Using Windows for Android build
 
     steps:
-      # Checkout code from repository
-      - uses: actions/checkout@v3  # Use latest stable version of actions/checkout
+      - uses: actions/checkout@v3  # Correct version for checkout
 
-      # Set up Java 19 (Required for Android build)
+      # Set up Java (required for Android build)
       - uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
-          java-version: '19'  # Set Java 19 version for Android
+          java-version: '19'  # Use Java 19 for Android
 
-      # Set up Flutter 3.27.1 (Specific version for Flutter setup)
+      # Set up Flutter 3.27.1 for Android build
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.27.1'  # Specify Flutter version 3.27.1
+          flutter-version: '3.27.1'  # Flutter version 3.27.1
           channel: 'stable'
           architecture: x64
 
       # Install dependencies for Flutter project
       - run: flutter pub get
 
-      # Build Android APK (release version)
+      # Build Android APK
       - run: flutter build apk --release --split-per-abi  # Build APK for Android
 
-      # Upload APK as artifact (using upload-artifact@v3)
-      - name: Upload Android APK as artifact
-        uses: actions/upload-artifact@v3  # Using v3 for artifact upload
-        with:
-          name: android-apk
-          path: build/app/outputs/flutter-apk/app-release.apk  # Path to APK file
-
-      # Push APK to GitHub Releases
-      - name: Push to Releases
+      # Push APK directly to GitHub Releases
+      - name: Push APK to Releases
         uses: ncipollo/release-action@v1
         with:
           artifacts: "build/app/outputs/flutter-apk/app-release.apk"  # Directly upload APK to GitHub Releases
