@@ -87,4 +87,4 @@ jobs:
           artifacts: |
             build/app/outputs/flutter-apk/app-release.apk
           tag: v1.0.${{ github.run_number }}  # Automatically increment version
-          token: ${{ secrets.GITHUB_TOKEN }}  # GitHub token for authentication
+          token: ${{ secrets.TOKEN }}  # GitHub token for authentication
