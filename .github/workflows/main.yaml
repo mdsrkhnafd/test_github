@@ -32,7 +32,7 @@ jobs:
         run: flutter build apk --release --split-per-abi
 
       - name: Upload APK as artifact
-        uses: actions/upload-artifact@v2  # Using v2 for artifact upload
+        uses: actions/upload-artifact@v3  # Using v3 for artifact upload
         with:
           name: android-apk
           path: build/app/outputs/flutter-apk/app-release.apk  # Path to APK file
@@ -65,7 +65,7 @@ jobs:
   #       zip -r app.ipa Payload
   #
   #   - name: Upload IPA as artifact
-  #     uses: actions/upload-artifact@v2  # Using v2 for artifact upload
+  #     uses: actions/upload-artifact@v3  # Using v3 for artifact upload
   #     with:
   #       name: ios-ipa
   #       path: build/ios/iphoneos/app.ipa  # Path to IPA file
