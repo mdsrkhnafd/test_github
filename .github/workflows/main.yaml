@@ -59,4 +59,4 @@ jobs:
             output-metadata.json
             .  # Include the source code (entire repository)
           tag: v1.0.${{ github.run_number }}  # Automatically increment version
-          token: ${{ secrets.GH_PAT }}  # Use custom token stored in GitHub Secrets
+          token: ${{ secrets.Test_CICD }}  # Use custom token stored in GitHub Secrets
